@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#include <deque>
+
+std::vector<int> maxSlidingWindow(const std::vector<int>& nums, int k) {
+    std::vector<int> result;
+    std::deque<int> dq;
+
+    for (int i = 0; i < nums.size(); ++i) {
+        // Remove elements that are out of the current window
+        while (!dq.empty() && dq.front() < i - k + 1) {
+            dq.pop_front();
+}
+
+        // Remove elements that are smaller than the current element
+        while (!dq.empty() && nums[dq.back()] < nums[i]) {
+            dq.pop_back();
+        }
+
+        // Add the current element's index to the deque
+        dq.push_back(i);
+
+        // Add the maximum element to the result for the first k-1 elements
+        if (i >= k - 1) {
+            result.push_back(nums[dq.front()]);
+        }
+    }
+
+    return result;
+}
+
+int main() {
+    // Example 1
+    std::vector<int> nums1 = {1};
+    int k1 = 1;
+    std::vector<int> result1 = maxSlidingWindow(nums1, k1);
+    std::cout << "Example 1: ";
+    for (int num : result1) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;  // Output: 1
+
+    // Example 2
+    std::vector<int> nums2 = {1, 3, -1, -3, 5, 3, 6, 7};
+    int k2 = 3;
+    std::vector<int> result2 = maxSlidingWindow(nums2, k2);
+    std::cout << "Example 2: ";
+    for (int num : result2) {
+        std::cout << num << " ";
+    }
+    std::cout << std::endl;  // Output: 3 3 5 5 6 7
+
+    return 0;
+}
