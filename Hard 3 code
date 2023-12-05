@@ -1,0 +1,36 @@
+#include <iostream>
+
+int countDigitOne(int n) {
+    int count = 0;
+    long long factor = 1;
+
+    while (n / factor > 0) {
+        int currentDigit = (n / factor) % 10;
+        int before = n / (factor * 10);
+        int after = n % factor;
+
+        if (currentDigit == 0) {
+            count += before * factor;
+        } else if (currentDigit == 1) {
+            count += before * factor + (after + 1);
+        } else {
+            count += (before + 1) * factor;
+        }
+
+        factor *= 10;
+    }
+
+    return count;
+}
+
+int main() {
+    // Example 1
+    int n1 = 13;
+    std::cout << "Example 1: " << countDigitOne(n1) << std::endl;  // Output: 6
+
+    // Example 2
+    int n2 = 0;
+    std::cout << "Example 2: " << countDigitOne(n2) << std::endl;  // Output: 0
+
+    return 0;
+}
