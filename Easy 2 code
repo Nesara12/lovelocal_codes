@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    struct TreeNode *left;
+    struct TreeNode *right;
+};
+
+struct TreeNode* sortedArrayToBST(int* nums, int left, int right) {
+    if (left > right) {
+        return NULL;
+    }
+
+    // Find the middle element of the array
+    int mid = left + (right - left) / 2;
+
+    // Create a new tree node with the middle element as the value
+    struct TreeNode* root = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    root->val = nums[mid];
+    root->left = sortedArrayToBST(nums, left, mid - 1);
+    root->right = sortedArrayToBST(nums, mid + 1, right);
+
+    return root;
+}
+
+struct TreeNode* sortedArrayToBSTWrapper(int* nums, int numsSize) {
+    return sortedArrayToBST(nums, 0, numsSize - 1);
+}
+
+// Function to print the inorder traversal of the tree (for verification)
+void inorderTraversal(struct TreeNode* root) {
+    if (root != NULL) {
+        inorderTraversal(root->left);
+        printf("%d ", root->val);
+        inorderTraversal(root->right);
+    }
+}
+
+int main() {
+    int nums1[] = {-10, -3, 0, 5, 9};
+    int nums2[] = {1, 3};
+
+    struct TreeNode* root1 = sortedArrayToBSTWrapper(nums1, sizeof(nums1) / sizeof(nums1[0]));
+    inorderTraversal(root1);
+    // Output: -10 -3 0 5 9
+
+    printf("\n");
+
+    struct TreeNode* root2 = sortedArrayToBSTWrapper(nums2, sizeof(nums2) / sizeof(nums2[0]));
+    inorderTraversal(root2);
+    // Output: 1 3
+
+    return 0;
+}
