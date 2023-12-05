@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+
+int maximalSquare(std::vector<std::vector<char>>& matrix) {
+    if (matrix.empty() || matrix[0].empty()) {
+        return 0;
+    }
+
+    int m = matrix.size();
+    int n = matrix[0].size();
+    int maxSide = 0;
+
+    // Create a 2D DP array to store the side length of the largest square ending at each cell
+    std::vector<std::vector<int>> dp(m, std::vector<int>(n, 0));
+
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (matrix[i][j] == '1') {
+                if (i == 0 || j == 0) {
+                    // If it's in the first row or first column, the side length is 1
+                    dp[i][j] = 1;
+                } else {
+                    // Otherwise, it depends on the minimum of the adjacent cells
+                    dp[i][j] = std::min({dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]}) + 1;
+                }
+                // Update the maximum side length
+                maxSide = std::max(maxSide, dp[i][j]);
+            }
+        }
+    }
+
+    // Return the area of the largest square
+    return maxSide * maxSide;
+}
+
+int main() {
+    // Example 1
+    std::vector<std::vector<char>> matrix1 = {{'0'}};
+    std::cout << "Example 1: " << maximalSquare(matrix1) << std::endl;  // Output: 0
+
+    // Example 2
+    std::vector<std::vector<char>> matrix2 = {{"0", "1"}, {"1", "0"}};
+    std::cout << "Example 2: " << maximalSquare(matrix2) << std::endl;  // Output: 1
+
+    // Example 3
+    std::vector<std::vector<char>> matrix3 = {{"1", "0", "1", "0", "0"},
+                                             {"1", "0", "1", "1", "1"},
+                                             {"1", "1", "1", "1", "1"},
+                                             {"1", "0", "0", "1", "0"}};
+    std::cout << "Example 3: " << maximalSquare(matrix3) << std::endl;  // Output: 4
+
+    return 0;
+}
