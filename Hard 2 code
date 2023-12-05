@@ -1,0 +1,46 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+std::string shortestPalindrome(const std::string& s) {
+    // Combine s and its reverse with a special character in between
+    std::string combined = s + "#" + std::string(s.rbegin(), s.rend());
+
+    // Compute the KMP table for the combined string
+    int n = combined.length();
+    std::vector<int> kmp(n, 0);
+
+    for (int i = 1, j = 0; i < n; ) {
+        if (combined[i] == combined[j]) {
+            kmp[i++] = ++j;
+        } else {
+            if (j > 0) {
+                j = kmp[j - 1];
+            } else {
+                kmp[i++] = 0;
+            }
+        }
+    }
+
+    // The length of the longest palindrome prefix in the reversed string
+    int palindromeLength = kmp[n - 1];
+
+    // Build the palindrome by appending characters from the original string
+    std::string palindrome = s.substr(palindromeLength);
+    std::reverse(palindrome.begin(), palindrome.end());
+    return palindrome + s;
+}
+
+int main() {
+    // Example 1
+    std::string s1 = "aacecaaa";
+    std::string result1 = shortestPalindrome(s1);
+    std::cout << "Example 1: " << result1 << std::endl;  // Output: "aaacecaaa"
+
+    // Example 2
+    std::string s2 = "abcd";
+    std::string result2 = shortestPalindrome(s2);
+    std::cout << "Example 2: " << result2 << std::endl;  // Output: "dcbabcd"
+
+    return 0;
+}
